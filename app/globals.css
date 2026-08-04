@@ -15,6 +15,11 @@
   /* gradient stops driven by ScrollStory.js as the page scrolls */
   --bg-from: #fbf6ff;
   --bg-to: #e3cef7;
+   /* gooey nav particle colors — all violet-derived */
+  --color-1: #a716d6;                     /* base violet */
+  --color-2: #c94fef;                     /* lighter violet */
+  --color-3: #7d0fa8;                     /* darker violet */
+  --color-4: #e3a6f7;                     /* pale violet-pink */
 }
 
 /* Registering this as a real <angle> type is what makes it smoothly
