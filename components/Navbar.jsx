@@ -94,7 +94,7 @@ function Navbar() {
               transition={{ type: "spring", stiffness: 180, damping: 22 }}
               className="flex items-center gap-3"
             >
-              <AnimatePresence>
+              {/* <AnimatePresence>
                 {collapsed && (
                   <motion.button
                     key="book"
@@ -107,14 +107,17 @@ function Navbar() {
                     Book a call
                   </motion.button>
                 )}
-              </AnimatePresence>
+              </AnimatePresence> */}
 
               <motion.button
                 layout
                 transition={{ type: "spring", stiffness: 180, damping: 22 }}
                 className="rounded-full border border-violet-dim px-5 py-2 font-display text-[13px] tracking-wide text-ivory transition-colors hover:border-violet hover:text-violet"
               >
+                <Link href={'/contact-us'}>
                 Contact us
+                </Link>
+                
               </motion.button>
             </motion.div>
           </div>

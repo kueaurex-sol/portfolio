@@ -124,3 +124,27 @@ body {
     transition: none;
   }
 }
+/* ---- date/time input theming ----
+   Native date/time pickers ignore normal CSS theming almost entirely —
+   `accent-color` (set inline in Contact.js's Field component) covers the
+   selected-day/highlight color in supporting browsers, but the little
+   calendar/clock icon itself has no color API at all. Instead of fighting
+   it with filter: hue-rotate() guesswork, this makes the native icon
+   invisible (opacity: 0, not display: none — it stays the real click
+   target) and Contact.js layers a themed SVG icon on top of it. */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Without this, a browser/OS in dark mode renders the native calendar and
+   time-list popups in a dark theme with a blue accent by default,
+   regardless of the page's own light theme — this is what you were
+   likely seeing. Forcing light here keeps the popup's own chrome (not
+   just the input box) on-theme. Also set inline via [color-scheme:light]
+   on the date/time Fields in Contact.js as a second, more targeted pass. */
+input[type="date"],
+input[type="time"] {
+  color-scheme: light;
+}

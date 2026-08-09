@@ -1,64 +1,3 @@
-// "use client";
-// import { FastAverageColor } from "fast-average-color";
-// import { useEffect, useRef, useState } from "react";
-// import StoryCard from "@/components/StoryCard";
-
-// const STORIES = [
-//   {
-//     title: "Pacific International",
-//     region: "DUBAI",
-//     image: "/pacific.png",
-//     des: "The Members Experience lets you personalize your favorite pacific",
-//     vid: "url",
-//   },
-//   {
-//     title: "Fiable Constructions",
-//     region: "INDIA",
-//     image: "/fiable.png",
-//     des: "The Members Experience lets you personalize your favorite Fiable",
-//     vid: "url",
-//   },
-//   {
-//     title: "RP Infra",
-//     region: "INDIA",
-//     image: "/RP.png",
-//     des: "The Members Experience lets you personalize your favorite RP Infra",
-//     vid: "url",
-//   },
-// ];
-
-// function TopStories() {
-//   const imgRef = useRef(null);
-//   const [rgb, setRgb] = useState("100,100,255");
-
-//   useEffect(() => {
-//     if (!imgRef.current) return;
-
-//     const fac = new FastAverageColor();
-
-//     fac.getColorAsync(imgRef.current).then((color) => {
-//       setRgb(color.value.slice(0, 3).join(","));
-//     });
-//   }, []);
-//   return (
-//     <section
-//       id="top-stories"
-//       className="relative bg-[#8A7198] px-[8vw] py-28 h-screen"
-//     >
-//       <h2 className="mb-14 text-center font-display text-3xl font-bold tracking-tight text-ivory md:text-4xl">
-//         Top Stories
-//       </h2>
-//       <div className="mx-auto flex max-w-4xl gap-14 ">
-//         {STORIES.map((story) => (
-//           <StoryCard key={story.title} story={story} />
-//         ))}
-//       </div>
-//     </section>
-//   );
-// }
-
-// export default TopStories;
-
 "use client";
 import { FastAverageColor } from "fast-average-color";
 import { useEffect, useRef, useState } from "react";
@@ -110,7 +49,9 @@ function TopStories() {
   }, []);
 
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     const cards = cardRefs.current.filter(Boolean);
 
     if (reduce) {
@@ -134,7 +75,7 @@ function TopStories() {
             toggleActions: "play none none reverse",
             invalidateOnRefresh: true, // recompute start position on refresh rather than trusting the first (possibly premature) measurement
           },
-        }
+        },
       );
     }, sectionRef);
 

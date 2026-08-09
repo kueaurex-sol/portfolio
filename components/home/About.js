@@ -1,9 +1,21 @@
 
 function About() {
   return (
-    <section id="about" className="relative flex min-h-screen items-center px-[8vw] py-28">
-      {/* text lives in the left ~55%; the right side is deliberately left
-          empty — that's where the 3D model docks after the hero converge */}
+    <section
+      id="about"
+      // Mobile: model is a FIXED full-viewport canvas centered via
+      // HERO_TARGET_MOBILE in ScrollStory.js (not in document flow), so
+      // "text below the model" is achieved with padding-top that reserves
+      // roughly the vertical space the model occupies, rather than actual
+      // flex stacking. pt-[46vh] is a first guess tuned against the
+      // model's mobile y offset (0.95) — if you adjust one, re-check the
+      // other so the text doesn't start under/over the model.
+      className="relative flex min-h-screen flex-col items-center justify-start px-[8vw] pt-[46vh] pb-28 text-center md:flex-row md:items-center md:justify-start md:py-28 md:pt-28 md:text-left"
+    >
+      {/* text lives in the left ~55% on desktop; the right side is
+          deliberately left empty — that's where the 3D model docks after
+          the hero converge. On mobile the model is centered above instead,
+          so this block is centered too. */}
       <div className="max-w-xl lg:max-w-2xl">
         <span className="mb-4 inline-block rounded-full border border-violet-dim px-4 py-1.5 font-mono text-[11px] tracking-[3px] text-violet">
           ABOUT US
