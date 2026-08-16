@@ -128,8 +128,12 @@ function Services() {
       </h2>
 
       {/* mobile: full-width track, one card per screen, horizontal drive
-          comes from the pinned ScrollTrigger above.
-          desktop: original static centered flex row, untouched. */}
+          comes from the pinned ScrollTrigger above. Each card is now
+          inset from the screen edge (mx-[5vw]) with its own rounded
+          corners and a shorter height, instead of a full-bleed, square,
+          80vh-tall panel.
+          desktop: original static centered flex row, untouched (mx-0,
+          w/h/rounded all reset via md:). */}
       <div
         ref={trackRef}
         className="flex w-max items-center gap-0 px-0 md:mx-auto md:w-[90vw] md:max-w-6xl md:justify-center md:gap-6 md:px-0"
@@ -137,7 +141,7 @@ function Services() {
         {SERVICES.map((s, i) => (
           <div
             key={s.title}
-            className={`group relative h-[80vh] w-screen shrink-0 overflow-hidden p-10 shadow-2xl shadow-ink/20 transition-all duration-500 ease-out md:h-[520px] md:w-[26vw] md:max-w-[400px] md:min-w-[300px] md:rounded-[36px] md:hover:z-20 md:hover:-translate-y-5 md:hover:rotate-0 ${CARD_TRANSFORM[i]}`}
+            className={`group relative mx-[5vw] h-[56vh] w-[90vw] shrink-0 overflow-hidden rounded-[28px] p-8 shadow-2xl shadow-ink/20 transition-all duration-500 ease-out md:mx-0 md:h-[520px] md:w-[26vw] md:max-w-[400px] md:min-w-[300px] md:rounded-[36px] md:p-10 md:hover:z-20 md:hover:-translate-y-5 md:hover:rotate-0 ${CARD_TRANSFORM[i]}`}
             style={{
               zIndex: i === 1 ? 10 : 5 - i,
               background: " linear-gradient(140deg,  #f1f1f5 0%,  #d7d5df 22%,  #b04be0 48%,  #6f667d 72%,  #383640 100%)",

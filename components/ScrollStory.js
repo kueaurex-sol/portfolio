@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useRef, useLayoutEffect } from "react";
@@ -19,29 +18,40 @@ gsap.registerPlugin(ScrollTrigger);
 const BACKGROUND_SCALE_50VH = 0.85;
 
 // ---- Hero -> About resting pose ----
-// Desktop docks the model to the right, beside the About text column.
-// Mobile centers it instead, since About's mobile layout stacks the text
-// BELOW the model rather than beside it (see About.js — it reserves top
-// space with padding-top for this). The y offset here and the pt-[Nvh] in
-// About.js are tuned together — if you nudge one, check the other still
-// lines up.
+// Mobile keeps y at 0 (screen-center) instead of parking the model near
+// the top — assembly now visibly happens in the middle of the screen,
+// and it stays there through About instead of drifting up first.
 const HERO_TARGET_DESKTOP = {
   rotY: 0, rotX: 0, spin: 1, scale: 0.7, x: 2.2, y: -0.1, z: 0,
   explode: 0, modelOpacity: 1, ambient: 0.45,
 };
 const HERO_TARGET_MOBILE = {
-  rotY: 0, rotX: 0, spin: 1, scale: 0.5, x: 0, y: 0.95, z: 0,
+  rotY: 0, rotX: 0, spin: 1, scale: 0.5, x: 0, y: 0, z: 0,
   explode: 0, modelOpacity: 1, ambient: 0.45,
 };
 
-// Waypoints the model passes through as the whole page scrolls. After Hero
-// + About, it holds as a centered, slowly-rotating background element
-// (no dismantling) until the footer, where it docks into the empty space
-// beside the footer heading (desktop) or just sits centered and dim above
-// the stacked footer content (mobile).
+// Waypoints the model passes through as the whole page scrolls. Each
+// waypoint can optionally specify `triggerEl` (a ref, checked first) or
+// `id` (a DOM id, fallback) plus its own triggerStart/triggerEnd — falls
+// back to "top bottom"/"top top" if not given (used by "footer" below).
+//
+// The "about" waypoint uses aboutInnerRef directly (via triggerEl,
+// resolved in the effect below) rather than an id lookup — About's own
+// internal markup may already contain an id="about", and a duplicate DOM
+// id would make getElementById's result unpredictable. Using the ref we
+// already hold sidesteps that entirely.
+//
+// It's also keyed to "bottom bottom" -> "bottom top" instead of the old
+// "top bottom" -> "top top": this fires only during About's LAST
+// viewport-height of scroll (whatever About's total height is), so the
+// model doesn't sit static at full opacity/docked-right for the entire
+// time the user is scrolling through About — it fades and recenters
+// right as About finishes, over exactly one viewport height every time.
 const WAYPOINTS_DESKTOP = [
   {
-    id: "why-choose-us",
+    useAboutRef: true,
+    triggerStart: "bottom bottom",
+    triggerEnd: "bottom top",
     state: {
       rotY: 0, rotX: 0, spin: 1,
       scale: BACKGROUND_SCALE_50VH, x: 0, y: 0, z: -1,
@@ -59,7 +69,9 @@ const WAYPOINTS_DESKTOP = [
 ];
 const WAYPOINTS_MOBILE = [
   {
-    id: "why-choose-us",
+    useAboutRef: true,
+    triggerStart: "bottom bottom",
+    triggerEnd: "bottom top",
     state: {
       rotY: 0, rotX: 0, spin: 1,
       scale: 0.55, x: 0, y: 0.4, z: -1,
@@ -108,9 +120,6 @@ export default function ScrollStory({ children }) {
 
   useLayoutEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // Checked once on mount, same as `reduce` above — doesn't react to a
-    // resize/rotation after load. Matches the rest of this file's
-    // convention; revisit if you need live breakpoint switching.
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
     const heroTarget = isMobile ? HERO_TARGET_MOBILE : HERO_TARGET_DESKTOP;
     const WAYPOINTS = isMobile ? WAYPOINTS_MOBILE : WAYPOINTS_DESKTOP;
@@ -182,38 +191,23 @@ export default function ScrollStory({ children }) {
           y: 0,
           duration: 0.5,
           ease: "power2.out",
-          // The reveal only ever needs to run once, forward. Once it's
-          // visually settled at y:0, drop the inline transform entirely
-          // (clearProps) instead of leaving `transform: translate(0px,0px)`
-          // sitting on the element. That identity transform LOOKS like a
-          // no-op but still counts as "having a transform" for CSS
-          // containing-block purposes — clearing it is what actually
-          // stops aboutInnerRef from being able to affect anything (now
-          // that only About lives inside it, this is mostly a belt-and-
-          // suspenders precaution rather than a fix for WhyChooseUs itself).
           onComplete: () => gsap.set(aboutInnerRef.current, { clearProps: "transform" }),
         }, 0.5);
 
       // ---- everything after About: model becomes a centered, slowly
       // rotating background presence, then docks near the footer ----
-      //
-      // Deliberately NOT using gsap.to() here — manual per-tick
-      // interpolation avoids competing tweens fighting over sceneState's
-      // properties, and onLeave / onEnterBack / onLeaveBack backstop it
-      // against fast scrolls that skip clean over a waypoint's ~100vh
-      // trigger zone.
       let prevState = heroTarget;
 
-      WAYPOINTS.forEach(({ id, state: target }) => {
-        const el = document.getElementById(id);
+      WAYPOINTS.forEach(({ id, useAboutRef, state: target, triggerStart, triggerEnd }) => {
+        const el = useAboutRef ? aboutInnerRef.current : document.getElementById(id);
         if (!el) return;
         const beforeState = prevState;
         let from = null;
 
         ScrollTrigger.create({
           trigger: el,
-          start: "top bottom",
-          end: "top top",
+          start: triggerStart || "top bottom",
+          end: triggerEnd || "top top",
           scrub: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
@@ -290,11 +284,11 @@ export default function ScrollStory({ children }) {
         <div className="relative z-10 max-w-3xl px-6 text-center">
           <span
             ref={eyebrowRef}
-            className="mb-6 inline-block rounded-full border border-violet-dim px-4 py-1.5 font-mono text-[11px] tracking-[3px] text-violet opacity-0"
+            className="mb-6 lg:inline-block md:inline-block hidden rounded-full border border-violet-dim px-4 py-1.5 font-mono text-[11px] tracking-[3px] text-violet opacity-0"
           >
             DIGITAL TRANSFORMATION AGENCY
           </span>
-          <h1 className="font-display text-4xl font-semibold leading-[1.15] tracking-tight text-ivory md:text-5xl lg:text-6xl">
+          <h1 className="font-display  font-semibold leading-[1.15] tracking-tight text-ivory md:text-5xl lg:text-6xl text-2xl">
             <span ref={lineOneRef} className="block opacity-0">
               We build the tech. We drive <span className="text-violet">growth</span>.
             </span>
@@ -302,7 +296,7 @@ export default function ScrollStory({ children }) {
               You own the <span className="text-violet">market</span>.
             </span>
           </h1>
-          <p ref={subRef} className="mx-auto mt-6 max-w-xl text-base text-ivory/60 opacity-0 md:text-lg">
+          <p ref={subRef} className="mx-auto mt-6 max-w-xl text-ivory/60 opacity-0 lg:text-lg md:text-lg text-sm">
             Stop patching together fragmented tools. We engineer high-performance software, custom
             AI systems, and aggressive growth marketing engines to scale in lockstep.
           </p>

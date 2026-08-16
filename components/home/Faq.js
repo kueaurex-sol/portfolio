@@ -50,10 +50,10 @@ function FaqItem({ item }) {
         visible ? "translate-x-0 opacity-100" : "translate-x-16 opacity-0"
       }`}
     >
-      <span className="font-display text-3xl font-bold text-violet/60">{item.n}</span>
+      <span className="font-display lg:text-3xl md:text-3xl text-lg font-bold text-violet/60">{item.n}</span>
       <div>
-        <p className="mb-3 font-display text-xl font-medium text-ivory md:text-2xl">{item.q}</p>
-        <p className="text-sm leading-relaxed text-ivory/60 md:text-base">
+        <p className="mb-3 font-display lg:text-3xl md:text-3xl text-lg font-medium text-ivory ">{item.q}</p>
+        <p className="lg:text-sm md:text-sm text-xs leading-relaxed text-ivory/60 ">
           <span className="text-violet/80">The Answer: </span>
           {item.a}
         </p>
@@ -114,12 +114,12 @@ function Faq() {
   return (
     <section ref={wrapperRef} id="faq" className="relative bg-void" style={{ height: "100vh" }}>
       <div className="sticky top-0 flex h-screen overflow-hidden">
-        <div className="flex w-[16vw] min-w-[130px] shrink-0 items-center justify-center border-r border-ivory/10">
+        <div className="flex w-[28vw] md:min-w-[130px] lg:min-w-[130px] shrink-0 items-center justify-center border-r border-ivory/10">
           <GradientText
             colors={["#A716D6", "#D9A6F5", "#7C11A3"]}
             animationSpeed={7}
             showBorder={false}
-            className="-rotate-90 whitespace-nowrap font-display text-6xl font-bold tracking-tight md:text-8xl"
+            className="-rotate-90 whitespace-nowrap font-display md:text-6xl text-3xl font-bold tracking-tight lg:text-8xl"
           >
             FAQ
           </GradientText>
@@ -128,7 +128,7 @@ function Faq() {
         <div
           ref={paneRef}
           data-faq-scroll
-          className={`relative h-screen flex-1 px-[6vw] py-[8vh] ${
+          className={`relative h-screen flex-1 lg:px-[6vw] lg:py-[8vh] md:px-[6vw] md:py-[8vh] px-[3vw] py-[4vh] ${
             reduceMotion ? "overflow-y-auto" : "overflow-hidden"
           }`}
         >

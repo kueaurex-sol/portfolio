@@ -199,13 +199,14 @@ function Framework() {
           the wheel below takes over, instead of staying pinned at the top
           for the whole pinned-scroll duration. Hidden on mobile entirely —
           mobile shows only the card wheel, nothing else. */}
-      <div className="hidden px-4 pt-12 md:block md:px-[8vw] md:pt-16">
-        <h2 className="font-display text-2xl font-bold tracking-tight text-ivory md:text-3xl lg:text-4xl">
+      <div className=" px-4 pt-12 md:block md:px-[8vw] md:pt-16">
+        <h2 className="font-display text-xl font-bold tracking-tight text-ivory md:text-3xl lg:text-4xl">
           Our Framework for Engineered Success
         </h2>
       </div>
 
       <div className="sticky top-0 h-screen overflow-hidden px-4 pt-12 md:px-[8vw] md:pt-0">
+        
         <div className="relative grid h-full grid-cols-1 gap-8 md:grid-cols-2 md:gap-12">
           {/* left: plain vertical stack, no curve/wheel motion. Hidden on
               mobile — only the card wheel shows there. Both the dim
@@ -217,6 +218,7 @@ function Framework() {
               padding/line-height, so remounting it reflowed the row and
               shifted the number. This way the layout never changes,
               nothing remounts, only opacity animates. */}
+              
           <div className="hidden md:flex flex-col justify-center gap-6">
             {STEPS.map((step, i) => {
               const isActive = activeIndex === i;
@@ -304,7 +306,7 @@ function StepIllustration({ step, index }) {
       />
 
       {/* fake browser bar */}
-      <div className="mb-2 flex items-center justify-between md:mb-4">
+      <div className="mb-2 lg:flex md:flex hidden items-center justify-between md:mb-4">
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-white/40 md:h-2.5 md:w-2.5" />
           <span className="h-2 w-2 rounded-full bg-white/25 md:h-2.5 md:w-2.5" />
@@ -317,19 +319,19 @@ function StepIllustration({ step, index }) {
 
       {/* icon + title share one row now; description sits below with
           tighter side padding since there's no CTA competing for space */}
-      <div className="flex h-[calc(100%-32px)] flex-col items-center justify-center px-1 text-center md:h-[calc(100%-40px)] md:px-2">
-        <div className="mb-2 flex items-center gap-2 md:mb-3 md:gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm md:h-10 md:w-10 md:rounded-xl">
+      <div className="flex h-[calc(100%-32px)] flex-col items-center justify-center px-1  md:h-[calc(100%-40px)] md:px-2">
+        <div className="mb-2 lg:mt-0 md:mt-0 mt-3 flex items-center gap-2 md:gap-3">
+          <div className="flex lg:h-8 lg:w-8 md:h-8 md:w-8 h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm md:rounded-xl">
             <Icon className="h-4 w-4 text-white md:h-5 md:w-5" />
           </div>
-          <p className="font-display text-base font-semibold leading-snug text-white md:text-lg">
+          <p className="font-display text-sm font-semibold leading-snug text-white md:text-lg lg:text-lg">
             {step.title}
           </p>
         </div>
-        <span className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-white/60 md:mb-2 md:text-xs">
+        <span className="lg:flex md:flex hidden mb-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-white/60 md:mb-2 md:text-xs">
           {step.tag}
         </span>
-        <p className="max-w-sm text-xs leading-relaxed text-white/70 md:text-sm">{step.desc}</p>
+        <p className="max-w-sm text-xs lg:leading-relaxed md:leading-relaxed text-white/70 lg:text-sm md:text-sm lg:mt-0 md:mt-0 mt-2">{step.desc}</p>
       </div>
     </div>
   );

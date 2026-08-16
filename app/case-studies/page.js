@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
 import { useGSAP } from "@gsap/react";
 import StoryCard from "@/components/StoryCard";
+import MeshBg from "@/components/MeshBg";
 
 gsap.registerPlugin(ScrollTrigger, Flip, useGSAP);
 
@@ -263,9 +264,11 @@ const closeCard = () => {
     <section
       ref={sectionRef}
       id="top-stories"
-      className="relative bg-[#8A7198] px-[8vw] py-28 h-screen overflow-hidden"
+        // style={{ backgroundImage: 'var(--gradient-mesh)' }}
+      className="relative  px-[8vw] py-28 h-screen overflow-hidden bg-white/28"
     >
-      <div ref={trackRef} className="flex max-w-none gap-14 w-max pr-72 pt-14">
+      <MeshBg />
+      <div ref={trackRef} className=" flex max-w-none gap-14 w-max pr-72 pt-14 ">
         {STORIES.map((s, i) => (
           <StoryCard key={i} story={s} ref={(el) => (cardRefs.current[i] = el)} onOpen={() => openCard(i)} />
         ))}
