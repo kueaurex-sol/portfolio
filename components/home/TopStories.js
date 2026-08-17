@@ -38,7 +38,15 @@
 //   const [rgb, setRgb] = useState("100,100,255");
 
 //   const sectionRef = useRef(null);
+//   const trackRef = useRef(null);
 //   const cardRefs = useRef([]);
+//   // -1, not 0: only ever set for real by the mobile carousel below (see
+//   // the WhyChooseUs fix — starting this at a real index makes card 0
+//   // permanently "active" on desktop where the carousel logic never
+//   // runs). Not currently used for a hover-style highlight here like
+//   // WhyChooseUs, but keeping the same convention in case StoryCard ever
+//   // wants an `active` prop.
+//   const [activeIndex, setActiveIndex] = useState(-1);
 
 //   useEffect(() => {
 //     if (!imgRef.current) return;
@@ -54,39 +62,213 @@
 //     const reduce = window.matchMedia(
 //       "(prefers-reduced-motion: reduce)",
 //     ).matches;
-//     const cards = cardRefs.current.filter(Boolean);
 
-//     if (reduce) {
-//       gsap.set(cards, { x: 0, opacity: 1 });
-//       return;
-//     }
+//     const mm = gsap.matchMedia();
 
-//     const ctx = gsap.context(() => {
-//       gsap.fromTo(
-//         cards,
-//         { x: 220, opacity: 0 },
-//         {
-//           x: 0,
-//           opacity: 1,
-//           duration: 0.8,
-//           ease: "power3.out",
-//           stagger: 0.15,
-//           scrollTrigger: {
-//             trigger: sectionRef.current,
-//             start: "top 65%",
-//             toggleActions: "play none none reverse",
-//             invalidateOnRefresh: true, // recompute start position on refresh rather than trusting the first (possibly premature) measurement
+//     // Desktop-only: the "fly in from the right" reveal. This animates
+//     // each card's own x — which is exactly the property the mobile
+//     // carousel below needs to drive on the shared track — so it's gated
+//     // out of mobile entirely instead of fighting the carousel for
+//     // control of the same transform.
+//     mm.add("(min-width: 768px)", () => {
+//       const cards = cardRefs.current.filter(Boolean);
+
+//       if (reduce) {
+//         gsap.set(cards, { x: 0, opacity: 1 });
+//         return;
+//       }
+
+//       const ctx = gsap.context(() => {
+//         gsap.fromTo(
+//           cards,
+//           { x: 220, opacity: 0 },
+//           {
+//             x: 0,
+//             opacity: 1,
+//             duration: 0.8,
+//             ease: "power3.out",
+//             stagger: 0.15,
+//             scrollTrigger: {
+//               trigger: sectionRef.current,
+//               start: "top 65%",
+//               toggleActions: "play none none reverse",
+//               invalidateOnRefresh: true,
+//             },
 //           },
-//         },
-//       );
-//     }, sectionRef);
+//         );
+//       }, sectionRef);
 
-//     // Layout can still be settling when this effect first runs — a pinned
-//     // section earlier on the page, web fonts loading late, or images
-//     // resizing can all shift where this section actually starts, which
-//     // silently throws off an already-computed trigger position. Forcing a
-//     // recheck once things have genuinely settled fixes triggers firing too
-//     // early (or late) relative to where the section really is.
+//       return () => ctx.revert();
+//     });
+
+//     // Mobile: scroll-locked, one-card-at-a-time carousel — identical
+//     // pattern to WhyChooseUs. Native scroll is fully disabled the moment
+//     // the section comes into view (via IntersectionObserver, which can't
+//     // be "skipped" by a fast fling the way discrete wheel/touch events
+//     // can), so every card change is driven only by our own goTo() calls,
+//     // exactly one per gesture, no matter how hard or how long the user
+//     // scrolls/swipes.
+//     mm.add("(max-width: 767px)", () => {
+//       const section = sectionRef.current;
+//       const track = trackRef.current;
+//       if (!section || !track) return;
+
+//       gsap.set(cardRefs.current.filter(Boolean), { x: 0, opacity: 1 });
+
+//       let index = 0;
+//       let animating = false;
+//       let locked = false;
+//       let lastScrollY = window.scrollY;
+//       let releasedAt = 0;
+
+//       let wheelBusy = false;
+//       let wheelGapTimer = null;
+//       let touchStartY = null;
+//       let touchStartX = null;
+//       let touchConsumed = false;
+
+//       const getDistance = () => track.scrollWidth - section.clientWidth;
+//       const xForIndex = (i) => -(getDistance() * i) / (STORIES.length - 1);
+//       const sectionTop = () => section.getBoundingClientRect().top + window.scrollY;
+
+//       function goTo(newIndex) {
+//         if (animating || newIndex === index || newIndex < 0 || newIndex > STORIES.length - 1) return;
+//         animating = true;
+//         index = newIndex;
+//         setActiveIndex(index);
+//         gsap.to(track, {
+//           x: xForIndex(index),
+//           duration: 0.6,
+//           ease: "power3.inOut",
+//           onComplete: () => { animating = false; },
+//         });
+//       }
+
+//       function lockAt(startIndex) {
+//         locked = true;
+//         index = startIndex;
+//         setActiveIndex(index);
+//         gsap.set(track, { x: xForIndex(index) });
+//         window.scrollTo({ top: sectionTop(), behavior: "auto" });
+//         document.documentElement.style.overflow = "hidden";
+//         document.body.style.overflow = "hidden";
+//       }
+
+//       function unlock() {
+//         locked = false;
+//         releasedAt = Date.now();
+//         document.documentElement.style.overflow = "";
+//         document.body.style.overflow = "";
+//       }
+
+//       function onWheel(e) {
+//         if (!locked) return;
+
+//         if (wheelBusy) {
+//           e.preventDefault();
+//           clearTimeout(wheelGapTimer);
+//           wheelGapTimer = setTimeout(() => { wheelBusy = false; }, 150);
+//           return;
+//         }
+
+//         wheelBusy = true;
+//         wheelGapTimer = setTimeout(() => { wheelBusy = false; }, 150);
+
+//         if (e.deltaY > 0) {
+//           if (index < STORIES.length - 1) {
+//             e.preventDefault();
+//             goTo(index + 1);
+//           } else {
+//             unlock();
+//           }
+//         } else if (e.deltaY < 0) {
+//           if (index > 0) {
+//             e.preventDefault();
+//             goTo(index - 1);
+//           } else {
+//             unlock();
+//           }
+//         }
+//       }
+
+//       function onTouchStart(e) {
+//         if (!locked) return;
+//         touchStartY = e.touches[0].clientY;
+//         touchStartX = e.touches[0].clientX;
+//         touchConsumed = false;
+//       }
+
+//       function onTouchMove(e) {
+//         if (!locked || touchStartY === null || touchConsumed) return;
+
+//         const dy = touchStartY - e.touches[0].clientY;
+//         const dx = touchStartX - e.touches[0].clientX;
+//         if (Math.abs(dx) > Math.abs(dy)) return;
+
+//         const threshold = 45;
+//         if (Math.abs(dy) < threshold) { e.preventDefault(); return; }
+
+//         touchConsumed = true;
+
+//         if (dy > 0) {
+//           if (index < STORIES.length - 1) {
+//             e.preventDefault();
+//             goTo(index + 1);
+//           } else {
+//             unlock();
+//           }
+//         } else {
+//           if (index > 0) {
+//             e.preventDefault();
+//             goTo(index - 1);
+//           } else {
+//             unlock();
+//           }
+//         }
+//       }
+
+//       function onTouchEnd() {
+//         touchStartY = null;
+//         touchStartX = null;
+//         touchConsumed = false;
+//       }
+
+//       window.addEventListener("wheel", onWheel, { passive: false });
+//       window.addEventListener("touchstart", onTouchStart, { passive: true });
+//       window.addEventListener("touchmove", onTouchMove, { passive: false });
+//       window.addEventListener("touchend", onTouchEnd);
+
+//       const io = new IntersectionObserver(
+//         (entries) => {
+//           const entry = entries[0];
+//           const currentY = window.scrollY;
+//           const scrollingDown = currentY > lastScrollY;
+//           lastScrollY = currentY;
+
+//           if (Date.now() - releasedAt < 400) return;
+
+//           if (entry.isIntersecting && !locked) {
+//             lockAt(scrollingDown ? 0 : STORIES.length - 1);
+//           }
+//         },
+//         { threshold: 0 }
+//       );
+//       io.observe(section);
+
+//       return () => {
+//         clearTimeout(wheelGapTimer);
+//         io.disconnect();
+//         window.removeEventListener("wheel", onWheel);
+//         window.removeEventListener("touchstart", onTouchStart);
+//         window.removeEventListener("touchmove", onTouchMove);
+//         window.removeEventListener("touchend", onTouchEnd);
+//         document.documentElement.style.overflow = "";
+//         document.body.style.overflow = "";
+//         gsap.set(track, { x: 0 });
+//         setActiveIndex(-1);
+//       };
+//     });
+
 //     const refresh = () => ScrollTrigger.refresh();
 //     if (document.readyState === "complete") {
 //       refresh();
@@ -97,12 +279,13 @@
 
 //     return () => {
 //       window.removeEventListener("load", refresh);
-//       ctx.revert();
+//       mm.revert();
 //     };
 //   }, []);
-// useEffect(() => {
+
+//   useEffect(() => {
 //     const el = meshRef.current;
-//     if (!el) return; // guard: bail if the DOM node isn't mounted yet
+//     if (!el) return;
 
 //     const vars = [
 //       '--g1-x', '--g1-y',
@@ -123,22 +306,34 @@
 //       })
 //     );
 
-//     // cleanup on unmount — kills all 12 tweens
 //     return () => tweens.forEach((t) => t.kill());
 //   }, []);
+
 //   return (
 //     <section
 //       ref={sectionRef}
 //       id="top-stories"
-//       className="relative px-[8vw] py-28 h-screen overflow-hidden bg-white/28"
+//       className="relative px-0 py-28 h-screen overflow-hidden bg-white/28 md:px-[8vw]"
 //     >
 //       <MeshBg />
-//       <h2 className="mb-14 text-center font-display text-3xl font-bold tracking-tight text-ivory md:text-4xl">
+//       <h2 className="mb-14 px-[8vw] text-center font-display text-3xl font-bold tracking-tight text-ivory md:px-0 md:text-4xl">
 //         Top Stories
 //       </h2>
-//       <div className="mx-auto flex max-w-4xl gap-14 ">
+
+//       {/* mobile: scroll-locked, one-card-at-a-time carousel — full
+//           viewport-width cards, stepped exactly one card per gesture,
+//           same pattern as WhyChooseUs.
+//           desktop: original centered flex row, untouched. */}
+//       <div
+//         ref={trackRef}
+//         className="flex w-max items-stretch gap-0 px-0 md:mx-auto md:w-auto md:max-w-4xl md:gap-14"
+//       >
 //         {STORIES.map((story, i) => (
-//           <div key={story.title} ref={(el) => (cardRefs.current[i] = el)}>
+//           <div
+//             key={story.title}
+//             ref={(el) => (cardRefs.current[i] = el)}
+//             className="w-screen shrink-0 px-[6vw] md:w-auto md:shrink md:px-0"
+//           >
 //             <StoryCard story={story} />
 //           </div>
 //         ))}
@@ -148,10 +343,9 @@
 // }
 
 // export default TopStories;
-
 "use client";
 import { FastAverageColor } from "fast-average-color";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import StoryCard from "@/components/StoryCard";
@@ -183,6 +377,37 @@ const STORIES = [
   },
 ];
 
+const AUTOPLAY_MS = 9000;
+// How far the "drag" shear leans before the card settles flat.
+const SKEW_ANGLE = 14;
+
+// Small circular button, purple outline + purple arrow, transparent fill.
+// dir="prev" mirrors the arrow horizontally instead of needing a second SVG.
+function CarouselButton({ dir, onClick, label }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-violet bg-transparent text-violet transition-transform active:scale-90"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        style={{ transform: dir === "prev" ? "scaleX(-1)" : undefined }}
+      >
+        <path d="M9 6l6 6-6 6" />
+      </svg>
+    </button>
+  );
+}
+
 function TopStories() {
   const imgRef = useRef(null);
   const meshRef = useRef(null);
@@ -191,13 +416,17 @@ function TopStories() {
   const sectionRef = useRef(null);
   const trackRef = useRef(null);
   const cardRefs = useRef([]);
-  // -1, not 0: only ever set for real by the mobile carousel below (see
-  // the WhyChooseUs fix — starting this at a real index makes card 0
-  // permanently "active" on desktop where the carousel logic never
-  // runs). Not currently used for a hover-style highlight here like
-  // WhyChooseUs, but keeping the same convention in case StoryCard ever
-  // wants an `active` prop.
+
+  // Same convention as WhyChooseUs: activeIndex only means "card is the
+  // current mobile slide" and stays -1 on desktop, where it's unused.
   const [activeIndex, setActiveIndex] = useState(-1);
+
+  // Mobile carousel index — mirrors WhyChooseUs exactly.
+  const [mobileIndex, setMobileIndex] = useState(0);
+  const mobileIndexRef = useRef(0);
+  const animatingRef = useRef(false);
+  const timerRef = useRef(null);
+  const isMobileRef = useRef(false);
 
   useEffect(() => {
     if (!imgRef.current) return;
@@ -209,18 +438,74 @@ function TopStories() {
     });
   }, []);
 
-  useEffect(() => {
+  const getDistance = () => {
+    const track = trackRef.current;
+    const section = sectionRef.current;
+    if (!track || !section) return 0;
+    return track.scrollWidth - section.clientWidth;
+  };
+  const xForIndex = (i) => -(getDistance() * i) / (STORIES.length - 1);
+
+  // direction: "next" | "prev" — controls which way the card leans as it
+  // drags in. transform-origin is pinned to the bottom edge (set once, on
+  // mount) so skewX only ever shifts things sideways.
+  const goTo = (newIndex, direction = "next", { reduce = false } = {}) => {
+    if (!isMobileRef.current) return;
+    const clamped = ((newIndex % STORIES.length) + STORIES.length) % STORIES.length;
+    if (animatingRef.current || clamped === mobileIndexRef.current) return;
+
+    animatingRef.current = true;
+    mobileIndexRef.current = clamped;
+    setMobileIndex(clamped);
+    setActiveIndex(clamped);
+
+    const track = trackRef.current;
+    const angle = direction === "next" ? SKEW_ANGLE : -SKEW_ANGLE;
+
+    if (reduce) {
+      gsap.set(track, { x: xForIndex(clamped), skewX: 0 });
+      animatingRef.current = false;
+      return;
+    }
+
+    gsap
+      .timeline({
+        onComplete: () => {
+          animatingRef.current = false;
+        },
+      })
+      .to(track, { skewX: -angle * 0.22, duration: 0.06, ease: "sine.out" }, 0)
+      .to(track, { skewX: angle, duration: 0.14, ease: "power1.out" }, 0.06)
+      .to(track, { x: xForIndex(clamped), duration: 0.6, ease: "power3.inOut" }, 0)
+      .to(track, { skewX: 0, duration: 0.75, ease: "elastic.out(1, 0.32)" }, 0.2);
+  };
+
+  const resetAutoplay = () => {
+    clearInterval(timerRef.current);
+    if (!isMobileRef.current) return;
+    timerRef.current = setInterval(() => {
+      goTo(mobileIndexRef.current + 1, "next");
+    }, AUTOPLAY_MS);
+  };
+
+  const handlePrev = () => {
+    goTo(mobileIndexRef.current - 1, "prev");
+    resetAutoplay();
+  };
+
+  const handleNext = () => {
+    goTo(mobileIndexRef.current + 1, "next");
+    resetAutoplay();
+  };
+
+  useLayoutEffect(() => {
     const reduce = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
     const mm = gsap.matchMedia();
 
-    // Desktop-only: the "fly in from the right" reveal. This animates
-    // each card's own x — which is exactly the property the mobile
-    // carousel below needs to drive on the shared track — so it's gated
-    // out of mobile entirely instead of fighting the carousel for
-    // control of the same transform.
+    // Desktop-only: the "fly in from the right" reveal — unchanged.
     mm.add("(min-width: 768px)", () => {
       const cards = cardRefs.current.filter(Boolean);
 
@@ -252,171 +537,27 @@ function TopStories() {
       return () => ctx.revert();
     });
 
-    // Mobile: scroll-locked, one-card-at-a-time carousel — identical
-    // pattern to WhyChooseUs. Native scroll is fully disabled the moment
-    // the section comes into view (via IntersectionObserver, which can't
-    // be "skipped" by a fast fling the way discrete wheel/touch events
-    // can), so every card change is driven only by our own goTo() calls,
-    // exactly one per gesture, no matter how hard or how long the user
-    // scrolls/swipes.
+    // Mobile: plain autoplaying carousel — same pattern as WhyChooseUs.
+    // No scroll-lock, no wheel/touch hijacking; the track animates via
+    // GSAP to the current mobileIndex's x position, advanced either by
+    // the AUTOPLAY_MS interval or the two circular buttons below.
     mm.add("(max-width: 767px)", () => {
-      const section = sectionRef.current;
-      const track = trackRef.current;
-      if (!section || !track) return;
+      isMobileRef.current = true;
 
-      gsap.set(cardRefs.current.filter(Boolean), { x: 0, opacity: 1 });
+      mobileIndexRef.current = 0;
+      setMobileIndex(0);
+      setActiveIndex(0);
+      gsap.set(trackRef.current, { x: 0, skewX: 0, transformOrigin: "50% 100%" });
 
-      let index = 0;
-      let animating = false;
-      let locked = false;
-      let lastScrollY = window.scrollY;
-      let releasedAt = 0;
-
-      let wheelBusy = false;
-      let wheelGapTimer = null;
-      let touchStartY = null;
-      let touchStartX = null;
-      let touchConsumed = false;
-
-      const getDistance = () => track.scrollWidth - section.clientWidth;
-      const xForIndex = (i) => -(getDistance() * i) / (STORIES.length - 1);
-      const sectionTop = () => section.getBoundingClientRect().top + window.scrollY;
-
-      function goTo(newIndex) {
-        if (animating || newIndex === index || newIndex < 0 || newIndex > STORIES.length - 1) return;
-        animating = true;
-        index = newIndex;
-        setActiveIndex(index);
-        gsap.to(track, {
-          x: xForIndex(index),
-          duration: 0.6,
-          ease: "power3.inOut",
-          onComplete: () => { animating = false; },
-        });
-      }
-
-      function lockAt(startIndex) {
-        locked = true;
-        index = startIndex;
-        setActiveIndex(index);
-        gsap.set(track, { x: xForIndex(index) });
-        window.scrollTo({ top: sectionTop(), behavior: "auto" });
-        document.documentElement.style.overflow = "hidden";
-        document.body.style.overflow = "hidden";
-      }
-
-      function unlock() {
-        locked = false;
-        releasedAt = Date.now();
-        document.documentElement.style.overflow = "";
-        document.body.style.overflow = "";
-      }
-
-      function onWheel(e) {
-        if (!locked) return;
-
-        if (wheelBusy) {
-          e.preventDefault();
-          clearTimeout(wheelGapTimer);
-          wheelGapTimer = setTimeout(() => { wheelBusy = false; }, 150);
-          return;
-        }
-
-        wheelBusy = true;
-        wheelGapTimer = setTimeout(() => { wheelBusy = false; }, 150);
-
-        if (e.deltaY > 0) {
-          if (index < STORIES.length - 1) {
-            e.preventDefault();
-            goTo(index + 1);
-          } else {
-            unlock();
-          }
-        } else if (e.deltaY < 0) {
-          if (index > 0) {
-            e.preventDefault();
-            goTo(index - 1);
-          } else {
-            unlock();
-          }
-        }
-      }
-
-      function onTouchStart(e) {
-        if (!locked) return;
-        touchStartY = e.touches[0].clientY;
-        touchStartX = e.touches[0].clientX;
-        touchConsumed = false;
-      }
-
-      function onTouchMove(e) {
-        if (!locked || touchStartY === null || touchConsumed) return;
-
-        const dy = touchStartY - e.touches[0].clientY;
-        const dx = touchStartX - e.touches[0].clientX;
-        if (Math.abs(dx) > Math.abs(dy)) return;
-
-        const threshold = 45;
-        if (Math.abs(dy) < threshold) { e.preventDefault(); return; }
-
-        touchConsumed = true;
-
-        if (dy > 0) {
-          if (index < STORIES.length - 1) {
-            e.preventDefault();
-            goTo(index + 1);
-          } else {
-            unlock();
-          }
-        } else {
-          if (index > 0) {
-            e.preventDefault();
-            goTo(index - 1);
-          } else {
-            unlock();
-          }
-        }
-      }
-
-      function onTouchEnd() {
-        touchStartY = null;
-        touchStartX = null;
-        touchConsumed = false;
-      }
-
-      window.addEventListener("wheel", onWheel, { passive: false });
-      window.addEventListener("touchstart", onTouchStart, { passive: true });
-      window.addEventListener("touchmove", onTouchMove, { passive: false });
-      window.addEventListener("touchend", onTouchEnd);
-
-      const io = new IntersectionObserver(
-        (entries) => {
-          const entry = entries[0];
-          const currentY = window.scrollY;
-          const scrollingDown = currentY > lastScrollY;
-          lastScrollY = currentY;
-
-          if (Date.now() - releasedAt < 400) return;
-
-          if (entry.isIntersecting && !locked) {
-            lockAt(scrollingDown ? 0 : STORIES.length - 1);
-          }
-        },
-        { threshold: 0 }
-      );
-      io.observe(section);
+      resetAutoplay();
 
       return () => {
-        clearTimeout(wheelGapTimer);
-        io.disconnect();
-        window.removeEventListener("wheel", onWheel);
-        window.removeEventListener("touchstart", onTouchStart);
-        window.removeEventListener("touchmove", onTouchMove);
-        window.removeEventListener("touchend", onTouchEnd);
-        document.documentElement.style.overflow = "";
-        document.body.style.overflow = "";
-        gsap.set(track, { x: 0 });
+        isMobileRef.current = false;
+        clearInterval(timerRef.current);
+        gsap.set(trackRef.current, { x: 0, skewX: 0, transformOrigin: "50% 100%" });
         setActiveIndex(-1);
+        setMobileIndex(0);
+        mobileIndexRef.current = 0;
       };
     });
 
@@ -433,6 +574,19 @@ function TopStories() {
       mm.revert();
     };
   }, []);
+
+  // Recompute position on resize — snaps instantly to the current index
+  // rather than animating.
+  useEffect(() => {
+    const handleResize = () => {
+      if (!isMobileRef.current) return;
+      gsap.set(trackRef.current, { x: xForIndex(mobileIndexRef.current), skewX: 0 });
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => () => clearInterval(timerRef.current), []);
 
   useEffect(() => {
     const el = meshRef.current;
@@ -464,16 +618,15 @@ function TopStories() {
     <section
       ref={sectionRef}
       id="top-stories"
-      className="relative px-0 py-28 h-screen overflow-hidden bg-white/28 md:px-[8vw]"
+      className="relative overflow-hidden px-0 py-28 md:overflow-visible md:px-[8vw]"
     >
       <MeshBg />
       <h2 className="mb-14 px-[8vw] text-center font-display text-3xl font-bold tracking-tight text-ivory md:px-0 md:text-4xl">
         Top Stories
       </h2>
 
-      {/* mobile: scroll-locked, one-card-at-a-time carousel — full
-          viewport-width cards, stepped exactly one card per gesture,
-          same pattern as WhyChooseUs.
+      {/* mobile: plain autoplaying carousel — same mechanics as
+          WhyChooseUs's track (skew-drag + AUTOPLAY_MS + buttons/dots).
           desktop: original centered flex row, untouched. */}
       <div
         ref={trackRef}
@@ -488,6 +641,25 @@ function TopStories() {
             <StoryCard story={story} />
           </div>
         ))}
+      </div>
+
+      {/* mobile-only controls: circular purple-outline prev/next buttons +
+          a small dot indicator row, centered below the card. */}
+      <div className="mt-8 flex items-center justify-center gap-6 md:hidden">
+        <CarouselButton dir="prev" onClick={handlePrev} label="Previous story" />
+
+        <div className="flex items-center gap-2">
+          {STORIES.map((story, i) => (
+            <span
+              key={story.title}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === mobileIndex ? "w-6 bg-violet" : "w-2 bg-violet/30"
+              }`}
+            />
+          ))}
+        </div>
+
+        <CarouselButton dir="next" onClick={handleNext} label="Next story" />
       </div>
     </section>
   );

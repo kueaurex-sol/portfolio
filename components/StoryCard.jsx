@@ -61,7 +61,9 @@ const StoryCard = forwardRef(function StoryCard({ story, onOpen }, ref) {
       onClick={onOpen}
     >
       {/* IMAGE STACK */}
-      <div className={`relative ${CARD_HEIGHT} ${CARD_WIDTH} overflow-visible pt-4 pb-2`}>
+      <div
+        className={`relative ${CARD_HEIGHT} ${CARD_WIDTH} overflow-visible pt-4 pb-2`}
+      >
         {WAVE.map((w, i) => (
           <div
             key={i}
