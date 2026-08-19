@@ -10,12 +10,12 @@ function Footer() {
       className="relative overflow-hidden px-[6vw] py-16 sm:px-[7vw] sm:py-20 md:h-[92vh] md:px-[8vw] md:py-24"
     >
       <h2 className="mb-10 max-w-2xl font-display text-2xl font-semibold leading-tight tracking-tight text-ivory sm:text-3xl sm:leading-tight md:mb-16 md:text-4xl">
-        <span className="flex flex-wrap items-center gap-2">
+        <span className="lg:flex lg:flex-wrap md:flex md:flex-wrap items-center gap-2">
           Let&apos;s build your next
           <br className="lg:hidden md:hidden block"/>
           <RotatingText
             texts={["Experiential", "Branding", "Digital"]}
-            mainClassName="px-2 sm:px-2 md:px-3 text-[#a716d6] overflow-hidden py-0.5 justify-center"
+            mainClassName=" text-[#a716d6] overflow-hidden py-0.5 "
             staggerFrom="last"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}

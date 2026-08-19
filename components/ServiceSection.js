@@ -278,7 +278,7 @@ function ServiceSection({
           </h3>
         </div>
 
-        <div className="relative mx-auto mt-auto h-[46%] w-[88vw] px-4 pb-6 sm:h-[42%] sm:w-[80vw] sm:px-6 sm:pb-8 lg:h-[40%] lg:w-[70vw] lg:pb-10">
+        <div className="relative mx-auto  w-[88vw] px-4 pb-6 lg:h-[42%] sm:w-[80vw] sm:px-6 sm:pb-8 md:h-[40%] h-[36%] lg:w-[70vw] lg:pb-10">
           {offerings.map((o, i) => (
             <div
               key={o.title}
