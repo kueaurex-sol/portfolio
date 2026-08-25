@@ -1,4 +1,3 @@
-
 function About() {
   return (
     <section
@@ -20,12 +19,12 @@ function About() {
         <span className="mb-4 inline-block rounded-full border border-violet-dim px-4 py-1.5 font-mono text-[11px] tracking-[3px] text-violet">
           ABOUT US
         </span>
-        <h2 className="mb-7 font-display font-bold tracking-tight text-ivory md:text-5xl lg:text-6xl text-xl">
+        <h2 className="mb-7 font-display font-bold tracking-tight text-ivory md:text-5xl lg:text-5xl text-xl">
           Built for brands that refuse
-          <br className="lg:flex md:flex hidden"/>
+          <br className="lg:flex md:flex hidden" />
           off-the-shelf limitations.
         </h2>
-        <p className="mb-5  leading-relaxed text-ivory/70 lg:text-lg md:text-lg text-sm">
+        {/* <p className="mb-5  leading-relaxed text-ivory/70 lg:text-lg md:text-lg text-sm">
           We don&apos;t just write code, and we don&apos;t just run ads — we bridge the gap
           between engineering and growth.
         </p>
@@ -36,6 +35,13 @@ function About() {
           Whether you are automating complex business workflows or launching a high-volume unified
           commerce ecosystem, we deliver the technical edge and market traction required to
           dominate your industry.
+        </p> */}
+        <p className=" leading-relaxed text-ivory/70 lg:text-lg md:text-lg text-sm">
+          Kueaurex Solutions bridges the gap between software engineering and
+          commercial growth. Built for ambitious brands, we design custom web
+          systems, mobile applications, and specialized operational software
+          tailored to your specific business logic, eliminating software bloat
+          and driving long-term scalability.
         </p>
       </div>
     </section>

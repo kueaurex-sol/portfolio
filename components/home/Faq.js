@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -7,17 +6,34 @@ import GradientText from "@/components/GradientText";
 const FAQS = [
   {
     n: "01",
-    q: "How do you guarantee that a complex project won't suffer from \"scope creep\" or budget overruns?",
-    a: "We mitigate this risk entirely during Phase 1 (Scoping & Strategy). Before any development contract is signed, we deliver a granular Technical Specification Document that defines exactly what is \"in scope\" and \"out of scope.\"",
+    q: 'How do you guarantee that a complex project wont suffer from "scope creep" or budget overruns?',
+    a: 'We mitigate this risk entirely during Phase 1 (Scoping & Strategy Discovery). Before any development contract is signed, we deliver a granular Technical Specification Document that explicitly defines what is "in scope" and "out of scope," ensuring guaranteed on-time delivery and fixed costs.',
   },
   {
     n: "02",
-    q: "We have complex legacy software. Can you integrate newer AI models and modern apps without breaking our existing systems?",
-    a: "Absolutely. We specialize in ecosystem-wide integration — our architects build secure, middle-tier APIs and custom web hooks that extract data from your legacy databases and feed them safely into modern applications or custom AI models, so your day-to-day business continuity stays uninterrupted.",
+    q: "Why should our business invest in custom software instead of paying for existing SaaS subscriptions?",
+    a: "Off-the-shelf SaaS apps force your business into rigid workflows and charge monthly fees per user that increase as you scale. Custom software built by Kueaurex Solutions gives you 100% intellectual property ownership, zero recurring user fees, and a platform built specifically around your exact operational competitive advantage.",
   },
-  { n: "03", q: "PLACEHOLDER — replace with your real question here.", a: "PLACEHOLDER — replace with your real answer here." },
-  { n: "04", q: "PLACEHOLDER — replace with your real question here.", a: "PLACEHOLDER — replace with your real answer here." },
-  { n: "05", q: "PLACEHOLDER — replace with your real question here.", a: "PLACEHOLDER — replace with your real answer here." },
+  {
+    n: "03",
+    q: "Who owns the source code and software rights once the project is finished?",
+    a: "You own 100% of the source code, digital assets, and intellectual property. Following our post-launch training, we transfer all code repositories, database rights, and administrative keys directly to your organization with zero vendor lock-in.",
+  },
+  {
+    n: "04",
+    q: "Can Kueaurex Solutions modernize our legacy software without interrupting current business operations?",
+    a: "Yes. Through ecosystem-wide digital transformation, our system architects build secure middle-tier APIs and custom data pipelines that extract information from legacy databases and connect them seamlessly to modern cloud platforms and mobile applications without causing operational downtime.",
+  },
+  {
+    n: "05",
+    q: "How does Kueaurex Solutions handle application security and regulatory compliance?",
+    a: "Security and compliance are architected directly into our core code from day one. We execute rigorous automated vulnerability scans, load testing, data governance protocols, and regional regulatory compliance checks (such as GDPR or HIPAA) before any application is deployed to live production servers.",
+  },
+  {
+    n: "06",
+    q: "What does the post-launch support and training process look like?",
+    a: "We conduct hands-on training sessions for both technical and non-technical staff. You receive detailed operational documentation, custom video walkthroughs, and a strategic scaling roadmap to ensure your internal team can confidently operate and grow your new digital asset.",
+  },
 ];
 
 function FaqItem({ item }) {
@@ -28,7 +44,9 @@ function FaqItem({ item }) {
     const el = ref.current;
     if (!el) return;
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     if (reduce) {
       setVisible(true);
       return;
@@ -37,7 +55,7 @@ function FaqItem({ item }) {
     const root = el.closest("[data-faq-scroll]");
     const observer = new IntersectionObserver(
       ([entry]) => setVisible(entry.isIntersecting), // toggles both ways, replays every pass
-      { root, threshold: 0.35, rootMargin: "0px 0px -10% 0px" }
+      { root, threshold: 0.35, rootMargin: "0px 0px -10% 0px" },
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -50,9 +68,13 @@ function FaqItem({ item }) {
         visible ? "translate-x-0 opacity-100" : "translate-x-16 opacity-0"
       }`}
     >
-      <span className="font-display lg:text-3xl md:text-3xl text-lg font-bold text-violet/60">{item.n}</span>
+      <span className="font-display lg:text-3xl md:text-3xl text-lg font-bold text-violet/60">
+        {item.n}
+      </span>
       <div>
-        <p className="mb-3 font-display lg:text-3xl md:text-3xl text-lg font-medium text-ivory ">{item.q}</p>
+        <p className="mb-3 font-display lg:text-3xl md:text-3xl text-lg font-medium text-ivory ">
+          {item.q}
+        </p>
         <p className="lg:text-sm md:text-sm text-xs leading-relaxed text-ivory/60 ">
           <span className="text-violet/80">The Answer: </span>
           {item.a}
@@ -72,7 +94,9 @@ function Faq() {
     const pane = paneRef.current;
     if (!wrapper || !pane) return;
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     setReduceMotion(reduce);
     if (reduce) return; // reduced-motion users get a plain native-scroll pane instead
 
@@ -112,7 +136,12 @@ function Faq() {
   }, []);
 
   return (
-    <section ref={wrapperRef} id="faq" className="relative bg-void" style={{ height: "100vh" }}>
+    <section
+      ref={wrapperRef}
+      id="faq"
+      className="relative bg-void"
+      style={{ height: "100vh" }}
+    >
       <div className="sticky top-0 flex h-screen overflow-hidden">
         <div className="flex w-[28vw] md:min-w-[130px] lg:min-w-[130px] shrink-0 items-center justify-center border-r border-ivory/10">
           <GradientText

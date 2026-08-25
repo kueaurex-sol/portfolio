@@ -167,6 +167,20 @@ import GradientText from "./GradientText";
 gsap.registerPlugin(ScrollTrigger);
 
 const CARD_BG = "linear-gradient(140deg, #d4a6f5 0%, #a716d6 42%, #5c0f80 100%)";
+// const CARD_BG = `linear-gradient(
+//   135deg,
+//   #5c0f80 0%,
+//   #7d1aa8 12%,
+//   #a716d6 24%,
+//   #e3c6f7 32%,
+//   #ffffff 38%,
+//   #e3c6f7 44%,
+//   #a716d6 55%,
+//   #8712b8 65%,
+//   #a716d6 75%,
+//   #c94fef 85%,
+//   #5c0f80 100%
+// )`;
 
 function ServiceSection({
   title,

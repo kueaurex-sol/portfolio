@@ -117,20 +117,21 @@ const StoryCard = forwardRef(function StoryCard({ story, onOpen }, ref) {
         <h3 className="font-display text-xl sm:text-2xl font-semibold text-ivory">
           {story.title}
         </h3>
-        <p className="font-display text-lg sm:text-xl italic text-ivory/70">
+        {/* <p className="font-display text-lg sm:text-xl italic text-ivory/70">
           members experience
-        </p>
+        </p> */}
+          <p className="font-display mt-2 text-xs tracking-[0.35em] text-ivory/30">
+                REGION
+              </p>
+              <p className="mt-2 text-sm text-ivory/40">{story.region}</p>
         <div className="mt-3 h-px w-12 bg-ivory transition-all duration-500 max-md:w-24 group-hover:w-24" />
         <div className="grid grid-rows-[0fr] max-md:grid-rows-[1fr] transition-all duration-500 group-hover:grid-rows-[1fr]">
           <div className="overflow-hidden">
             <div className="translate-y-6 opacity-0 max-md:translate-y-0 max-md:opacity-100 transition-all duration-500 delay-200 group-hover:translate-y-0 group-hover:opacity-100">
               <p className="mt-3 text-sm leading-7 text-ivory/70">
-                {story.des}
+               <span className="font-bold">Scope: </span> {story.projectScope}
               </p>
-              <p className="mt-2 text-xs tracking-[0.35em] text-ivory/30">
-                REGION
-              </p>
-              <p className="mt-2 text-sm text-ivory/40">{story.region}</p>
+            
             </div>
           </div>
         </div>
