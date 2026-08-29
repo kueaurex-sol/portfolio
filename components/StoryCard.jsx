@@ -121,9 +121,9 @@ const StoryCard = forwardRef(function StoryCard({ story, onOpen }, ref) {
           members experience
         </p> */}
           <p className="font-display mt-2 text-xs tracking-[0.35em] text-ivory/30">
-                REGION
+                REGION: <span className="mt-2 text-sm text-ivory/40">{story.region}</span>
               </p>
-              <p className="mt-2 text-sm text-ivory/40">{story.region}</p>
+              
         <div className="mt-3 h-px w-12 bg-ivory transition-all duration-500 max-md:w-24 group-hover:w-24" />
         <div className="grid grid-rows-[0fr] max-md:grid-rows-[1fr] transition-all duration-500 group-hover:grid-rows-[1fr]">
           <div className="overflow-hidden">

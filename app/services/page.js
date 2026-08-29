@@ -108,7 +108,7 @@
 //     </>
 //   );
 // }
-import Navbar from "@/components/Navbar";
+
 import ServiceSection from "@/components/ServiceSection";
 
 const SERVICES = [
@@ -199,7 +199,7 @@ export default function ServicesPage() {
     <>
       <main className="pt-24 sm:pt-28 md:pt-32">
         <div className="mx-auto mb-4 max-w-3xl px-6 text-center sm:px-[6vw] lg:px-[8vw]">
-          <span className="mb-4 inline-block rounded-full border border-violet-dim px-3 py-1 font-mono text-[10px] tracking-[2px] text-violet sm:mb-5 sm:px-4 sm:py-1.5 sm:text-[11px] sm:tracking-[3px]">
+          <span className="mb-4 inline-block px-3 py-1 font-mono text-[10px] tracking-[2px] text-violet sm:mb-5 sm:px-4 sm:py-1.5 sm:text-[11px] sm:tracking-[3px]">
             WHAT WE DO
           </span>
           <h1 className="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl md:text-5xl">

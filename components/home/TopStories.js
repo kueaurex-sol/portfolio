@@ -355,25 +355,43 @@ gsap.registerPlugin(ScrollTrigger);
 
 const STORIES = [
   {
+    logo: "url",
     title: "Pacific International",
     region: "DUBAI",
     image: "/pacific.png",
     des: "The Members Experience lets you personalize your favorite pacific",
     vid: "url",
+    projectScope:"Business portfolio, services showcasing, and an online client enquiry system through the website.",
+    problem:"Pacific International lacked a centralized, modern digital presence to effectively showcase their global service capabilities. Their existing communication channels resulted in fragmented, manual customer inquiries, making it difficult to capture, track, and qualify high-value business leads efficiently.",
+    solution:"We engineered a sleek, high-performance business portfolio website designed to clearly categorize and showcase their full suite of services. The platform was integrated with a custom, secure online client enquiry system featuring automated routing. This streamlined lead capture, reduced response times, and provided a seamless user experience for prospective B2B clients.",
+    testimonial:'"The new platform completely transformed how we present our business to the world. The automated enquiry system has significantly cut down our administrative overhead and allowed our team to respond to high-priority leads faster than ever before." — Management Team, Pacific International',
+    websiteLink: "https://pacificinternationalservices.com/"
   },
   {
+    logo: "url",
     title: "Fiable Constructions",
     region: "INDIA",
     image: "/fiable.png",
     des: "The Members Experience lets you personalize your favorite Fiable",
     vid: "url",
+     projectScope:"Business portfolio, services showcasing, online client enquiry system through the website, dynamic projects adding system, SEO optimization, and growth marketing.",
+    problem:"Fiable Constructions needed a way to highlight their growing portfolio of completed and ongoing projects without constantly relying on developers for manual site updates. Furthermore, low search engine visibility and a lack of structured digital marketing meant they were missing out on valuable local commercial and residential construction leads.",
+    solution:"We developed a robust, scalable digital ecosystem featuring a dynamic dynamic projects adding system (CMS), allowing their team to upload new case studies, images, and milestones on the fly. To drive traffic, we implemented an aggressive on-page and technical SEO optimization strategy combined with data-backed growth marketing campaigns, funneling high-intent traffic directly into a custom online client enquiry system.",
+    testimonial:'"Having the ability to showcase our new construction projects instantly has given us a massive competitive edge. Combined with the SEO boost and growth marketing strategies, our inbound project inquiries have increased dramatically." — Director, Fiable Constructions',
+    websiteLink: "https://www.fiableconstructions.com/"
   },
   {
+    logo: "url",
     title: "RP Infra",
     region: "INDIA",
     image: "/RP.png",
     des: "The Members Experience lets you personalize your favorite RP Infra",
     vid: "url",
+     projectScope:"",
+    problem:"",
+    solution:"",
+    testimonial:"",
+    websiteLink: ""
   },
 ];
 
@@ -630,7 +648,7 @@ function TopStories() {
           desktop: original centered flex row, untouched. */}
       <div
         ref={trackRef}
-        className="flex w-max items-stretch gap-0 px-0 md:mx-auto md:w-auto md:max-w-4xl md:gap-14"
+        className="flex w-max items-stretch gap-0 px-0  md:w-auto md:max-w-4xl md:gap-14"
       >
         {STORIES.map((story, i) => (
           <div

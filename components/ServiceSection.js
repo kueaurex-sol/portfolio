@@ -314,14 +314,14 @@ function ServiceSection({
         </div>
       </div>
 
-      {closingHeading && (
+      {/* {closingHeading && (
         <div className="mx-auto max-w-2xl px-6 py-12 text-center sm:py-16">
           <h3 className="mb-3 font-display text-lg font-semibold text-ink sm:text-xl">
             {closingHeading}
           </h3>
           <p className="text-sm leading-relaxed text-ink/65 sm:text-base">{closingBody}</p>
         </div>
-      )}
+      )} */}
     </>
   );
 }

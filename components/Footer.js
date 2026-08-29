@@ -51,9 +51,9 @@ function Footer() {
             ELSEWHERE
           </p>
           <ul className="space-y-2 text-ivory/70">
-            <li>Instagram</li>
-            <li>LinkedIn</li>
-            <li>X</li>
+            <Link target="_blank" href={'https://www.instagram.com/kueaurexsol?igsi=NHlrOThycmxyaWwz'}><li>Instagram</li> </Link>
+             <Link target="_blank" href={'https://www.linkedin.com/company/kueaurex-solutions/'}><li>LinkedIn</li> </Link>
+             <Link target="_blank" href={''}> <li>X</li></Link>
           </ul>
         </div>
         {/* col-span-2 on the smallest screens only — with 3 groups in a
@@ -67,7 +67,10 @@ function Footer() {
         </div>
       </div>
 
-      <div className="mt-10 border-t border-dotted pt-4 text-sm text-ivory sm:mt-12 sm:text-base md:mt-12">
+      <div className="mt-10 pt-4 text-sm text-ivory sm:mt-12 sm:text-base md:mt-12">
+        <p className="mb-3 border-b-2 border-dotted font-mono text-[11px] tracking-[2px] text-ivory/40">
+            LOCATION
+          </p>
         HYDERABAD, India
       </div>
 

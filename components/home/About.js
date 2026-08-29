@@ -16,7 +16,7 @@ function About() {
           the hero converge. On mobile the model is centered above instead,
           so this block is centered too. */}
       <div className="max-w-xl lg:max-w-2xl lg:bg-transparent md:bg-transparent bg-white/70 rounded-xl lg:p-0 md:p-0 p-4">
-        <span className="mb-4 inline-block rounded-full border border-violet-dim px-4 py-1.5 font-mono text-[11px] tracking-[3px] text-violet">
+        <span className="mb-4 inline-block py-1.5 font-mono text-[11px] tracking-[3px] text-violet font-semibold">
           ABOUT US
         </span>
         <h2 className="mb-7 font-display font-bold tracking-tight text-ivory md:text-5xl lg:text-5xl text-xl">

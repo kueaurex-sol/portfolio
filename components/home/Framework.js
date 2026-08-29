@@ -8,7 +8,7 @@ const STEPS = [
   {
     tag: "Discovery",
     title: "Scoping & Strategy Discovery",
-    desc: "We don't start by guessing. We begin with an intensive discovery deep-dive to map your operational bottlenecks, business goals, and growth targets. By the end of this phase, you receive a crystal-clear project roadmap, defined technical requirements, and a guaranteed scope of work — ensuring zero surprises down the line.",
+    desc: "We don't start by guessing. We begin with an intensive discovery deep dive to map your operational bottlenecks, business goals, and growth targets. By the end of this phase, you receive a crystal clear project roadmap, defined technical requirements, and a guaranteed scope of work ensuring zero surprises down the line.",
     from: "#7C3AED",
     to: "#312E81",
     Icon: CompassIcon,
@@ -24,7 +24,7 @@ const STEPS = [
   {
     tag: "Build",
     title: "Agile Development & Sprint Cycles",
-    desc: "Our engineering team brings the architecture to life using modern tech stacks and agile methodologies. We break the build down into bi-weekly sprints, offering you transparent, clickable milestones along the way. You can see the progress in real-time, allowing for continuous feedback and pivoting if business needs shift.",
+    desc: "Our engineering team brings the architecture to life using modern tech stacks and agile methodologies. We break the build down into bi weekly sprints, offering you transparent, clickable milestones along the way. You can see the progress in real time, allowing for continuous feedback and pivoting if business needs shift.",
     from: "#059669",
     to: "#064E3B",
     Icon: SprintIcon,
@@ -32,15 +32,15 @@ const STEPS = [
   {
     tag: "Security",
     title: "Security & Quality Assessment",
-    desc: "We treat security as a non-negotiable metric, not an afterthought. Your product undergoes rigorous automated and manual testing, including vulnerability scans, load testing, and compliance checks (such as GDPR or HIPAA depending on your region). We break our own code to ensure nobody else can.",
+    desc: "We treat security as a non negotiable metric, not an afterthought. Your product undergoes rigorous automated and manual testing, including vulnerability scans, load testing, and compliance checks (such as GDPR or HIPAA depending on your region). We break our own code to ensure nobody else can.",
     from: "#DB2777",
     to: "#4C0519",
     Icon: ShieldIcon,
   },
   {
     tag: "Launch",
-    title: "Seamless Deployment & Post-Launch Testing",
-    desc: "We handle the complex choreography of going live with zero downtime to your active operations. Once deployed to production servers or app stores, we conduct an intensive round of post-launch smoke testing to verify that real-world user interactions, payment gateways, and data pipelines are functioning perfectly.",
+    title: "Seamless Deployment & Post Launch Testing",
+    desc: "We handle the complex choreography of going live with zero downtime to your active operations. Once deployed to production servers or app stores, we conduct an intensive round of post launch smoke testing to verify that real world user interactions, payment gateways, and data pipelines are functioning perfectly.",
     from: "#EA580C",
     to: "#431407",
     Icon: RocketIcon,
@@ -48,14 +48,14 @@ const STEPS = [
   {
     tag: "Growth",
     title: "Client Offboarding & Growth Training",
-    desc: "We don't just throw the keys over the fence. We conduct thorough, hands-on training sessions for your technical and non-technical staff. You receive detailed documentation, custom video walkthroughs, and a strategic framework on how to use and scale your new digital asset to drive ongoing business value.",
+    desc: "We don't just throw the keys over the fence. We conduct thorough, hands on training sessions for your technical and non technical staff. You receive detailed documentation, custom video walkthroughs, and a strategic framework on how to use and scale your new digital asset to drive ongoing business value.",
     from: "#0891B2",
     to: "#083344",
     Icon: GraduationIcon,
   },
 ];
 
-// ---- shared wheel math, lifted from OptionWheel's per-item layout ----
+//  --- shared wheel math, lifted from OptionWheel's per-item layout ----
 // d = signed distance (in "steps") from this item to the current wheel
 // position. mirror flips which way the curve bows (1 = curves like
 // OptionWheel's side="left", -1 = curves like side="right").
@@ -275,7 +275,7 @@ function Framework() {
               <div
                 key={step.title}
                 ref={(el) => (cardRefs.current[i] = el)}
-                className="absolute left-0 top-1/2 h-[240px] w-full origin-right overflow-hidden rounded-2xl border border-violet-dim shadow-2xl md:h-[280px]"
+                className="absolute left-0 top-1/2  w-full origin-right overflow-hidden rounded-2xl border border-violet-dim shadow-2xl "
                 style={{ willChange: "transform, opacity, filter" }}
               >
                 <StepIllustration step={step} index={i} />
@@ -292,7 +292,7 @@ function StepIllustration({ step, index }) {
   const { Icon } = step;
   return (
     <div
-      className="relative h-full w-full p-6"
+      className="relative p-6"
       style={{ background: `linear-gradient(160deg, ${step.from} 0%, ${step.to} 100%)` }}
     >
       {/* decorative blobs */}
@@ -306,7 +306,7 @@ function StepIllustration({ step, index }) {
       />
 
       {/* fake browser bar */}
-      <div className="mb-2 lg:flex md:flex hidden items-center justify-between md:mb-4">
+      <div className="mb-2  hidden items-center justify-between md:mb-4">
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-white/40 md:h-2.5 md:w-2.5" />
           <span className="h-2 w-2 rounded-full bg-white/25 md:h-2.5 md:w-2.5" />
@@ -319,7 +319,7 @@ function StepIllustration({ step, index }) {
 
       {/* icon + title share one row now; description sits below with
           tighter side padding since there's no CTA competing for space */}
-      <div className="flex h-[calc(100%-32px)] flex-col items-center justify-center px-1  md:h-[calc(100%-40px)] md:px-2">
+      <div className="flex h-[calc(100%-32px)] flex-col items-center justify-center md:h-[calc(100%-40px)]">
         <div className="mb-2 lg:mt-0 md:mt-0 mt-3 flex items-center gap-2 md:gap-3">
           <div className="flex lg:h-8 lg:w-8 md:h-8 md:w-8 h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm md:rounded-xl">
             <Icon className="h-4 w-4 text-white md:h-5 md:w-5" />

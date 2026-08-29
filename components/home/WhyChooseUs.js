@@ -325,17 +325,17 @@ const CARDS = [
   {
     n: "01",
     title: "Security & Compliance By Design",
-    body: "Every custom app, software, and AI model we deploy is architected with strict security-first protocols. We embed regional regulations, strict data governance, and industry-specific compliance norms directly into the core code from day one.",
+    body: "Every custom app, software, and AI model we deploy is architected with strict security first protocols. We embed regional regulations, strict data governance, and industry specific compliance norms directly into the core code from day one.",
   },
   {
     n: "02",
-    title: "Ecosystem-Wide Transformation",
+    title: "Ecosystem Wide Transformation",
     body: "We analyze your business holistically. By reframing legacy workflows and integrating advanced, evolutionary tech, we ensure your development scales seamlessly across your entire operational framework.",
   },
   {
     n: "03",
     title: "The Collaborative Evolution",
-    body: "We practice radical transparency through constant interaction. We don't just hand over a finished product; we co-author it with you, so your team knows exactly how it works and how to scale it.",
+    body: "We practice radical transparency through constant interaction. We don't just hand over a finished product; we co author it with you, so your team knows exactly how it works and how to scale it.",
   },
   {
     n: "04",
@@ -346,7 +346,7 @@ const CARDS = [
 
 const BUBBLE_COUNT = 7;
 const AUTOPLAY_MS = 9000;
-// Same curve StoryCard's image-lift/wave-stack reveal uses — reusing it
+// Same curve StoryCard's image lift/wave-stack reveal uses — reusing it
 // here is what makes this feel like the same animation language as the
 // rest of the site, instead of a separate, unrelated motion style.
 const ENTER_EASE = "cubic-bezier(0.34, 1.56, 0.64, 1)";

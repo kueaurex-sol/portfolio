@@ -605,6 +605,17 @@ function Navbar() {
                 }`}
               >
                 <Link href={'/contact-us'}>
+                  Technical Audit
+                </Link>
+              </motion.button>
+              <motion.button
+                layout
+                transition={{ type: "spring", stiffness: 180, damping: 22 }}
+                className={`rounded-full border border-violet-dim font-display text-[13px] tracking-wide text-ivory transition-colors hover:border-violet hover:text-violet ${
+                  collapsed ? "px-4 py-1.5" : "px-5 py-2"
+                }`}
+              >
+                <Link href={'/contact-us'}>
                   Contact us
                 </Link>
               </motion.button>
