@@ -1,9 +1,8 @@
-"use client";
-
 import { useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
 function getOrientationOffset(modelKey) {
   // Each model gets its own default since they were exported with different
@@ -146,6 +145,9 @@ const ThreeScene = forwardRef(function ThreeScene({ onModelReady }, ref) {
 
     // ---- the real model ----
     const gltfLoader = new GLTFLoader();
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath("/draco/"); // host the decoder files yourself
+    gltfLoader.setDRACOLoader(dracoLoader);
     const isTrial =
       typeof window !== "undefined" && new URLSearchParams(window.location.search).get("model") === "trial";
     const modelPath = isTrial ? "/trial.glb" : "/robot-head.glb";

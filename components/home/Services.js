@@ -4,6 +4,7 @@
 import { useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -162,7 +163,7 @@ function Services() {
               className="absolute inset-x-0 bottom-0 z-0 h-[36%] translate-y-[105%] overflow-hidden transition-transform duration-500 ease-out group-hover:translate-y-0"
               style={{ borderRadius: "50% 50% 0 0 / 50px 50px 0 0" }}
             >
-              <img src={s.art} alt="" className="h-full w-full object-cover" />
+              <Image width={160} height={40} src={s.art} alt="" className="h-full w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent" />
             </div>
 

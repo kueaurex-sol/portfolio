@@ -2,6 +2,7 @@
 
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { FastAverageColor } from "fast-average-color";
+import Image from "next/image";
 
 function lighten(rgb, amount) {
   const [r, g, b] = rgb;
@@ -105,9 +106,13 @@ const StoryCard = forwardRef(function StoryCard({ story, onOpen }, ref) {
           }}
         >
           <img
+          loading="lazy" 
+          // width={160} height={40}
             ref={imgRef}
             src={story.image}
             className="h-full w-full object-cover"
+            alt=""
+            // quality={100}
           />
         </div>
       </div>

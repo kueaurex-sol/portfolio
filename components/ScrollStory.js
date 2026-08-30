@@ -1,11 +1,12 @@
-
 "use client";
 
 import { useRef, useLayoutEffect } from "react";
 import { animate, stagger } from "animejs";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import ThreeScene from "./ThreeScene";
+// import ThreeScene from "./ThreeScene";
+import dynamic from "next/dynamic";
+const ThreeScene = dynamic(() => import("./ThreeScene"), { ssr: false });
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -55,8 +56,8 @@ const WAYPOINTS_MOBILE = [
     id: "footer",
     state: {
       rotY: 0, rotX: 0, spin: 1,
-      scale: 0.4, x: 0, y: 0.6, z: 0,
-      modelOpacity: 0.3, ambient: 0.25, explode: 0,
+      scale: 0.24, x: 0.8, y: 1.1, z: 0,
+      modelOpacity: 0.7, ambient: 0.25, explode: 0,
     },
   },
 ];

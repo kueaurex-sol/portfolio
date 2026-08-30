@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+
 const tomorrow = Tomorrow({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
