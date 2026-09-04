@@ -219,3 +219,207 @@ input[type="time"] {
     animation: none;
   }
 }
+
+/* =========================================
+   KUEAUREX LOADING SCREEN
+========================================= */
+
+.loader {
+  position: fixed;
+  inset: 0;
+
+  width: 100%;
+  height: 100vh;
+
+  background: #000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 99999;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   WORDMARK
+========================================= */
+
+.loader-wordmark {
+  position: relative;
+
+  display: inline-block;
+
+  font-family: "Orbitron", sans-serif;
+
+  font-size: clamp(36px, 6vw, 86px);
+
+  font-weight: 800;
+
+  letter-spacing: -0.075em;
+
+  line-height: 1;
+
+  white-space: nowrap;
+
+  transform: scaleX(1.05);
+
+  animation: wordmarkAppear 0.8s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
+}
+
+
+/* =========================================
+   BASE TEXT
+========================================= */
+
+.loader-text {
+  display: block;
+
+  font-family: "Orbitron", sans-serif;
+
+  font-size: inherit;
+
+  font-weight: inherit;
+
+  letter-spacing: inherit;
+
+  line-height: inherit;
+}
+
+
+/* Dark letters underneath */
+
+.loader-text-base {
+  color: #29232d;
+}
+
+
+/* =========================================
+   PURPLE FILL
+========================================= */
+
+.loader-text-fill {
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  color: #a716d6;
+
+  clip-path: inset(0 100% 0 0);
+
+  animation: fillLetters 1.9s
+    cubic-bezier(0.65, 0, 0.35, 1)
+    0.25s forwards;
+}
+
+
+/* =========================================
+   FILL ANIMATION
+========================================= */
+
+@keyframes fillLetters {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  100% {
+    clip-path: inset(0 0% 0 0);
+  }
+}
+
+
+/* =========================================
+   INITIAL APPEAR
+========================================= */
+
+@keyframes wordmarkAppear {
+  0% {
+    opacity: 0;
+
+    transform:
+      scaleX(1.05)
+      scale(0.9);
+
+    filter: blur(5px);
+  }
+
+  100% {
+    opacity: 1;
+
+    transform:
+      scaleX(1.05)
+      scale(1);
+
+    filter: blur(0);
+  }
+}
+
+
+/* =========================================
+   EXIT
+========================================= */
+
+.loader-exit {
+  animation: loaderFadeOut 0.65s
+    cubic-bezier(0.76, 0, 0.24, 1)
+    forwards;
+}
+
+
+.loader-exit .loader-wordmark {
+  animation: wordmarkExit 0.65s
+    cubic-bezier(0.76, 0, 0.24, 1)
+    forwards;
+}
+
+
+/* =========================================
+   LOADER FADE
+========================================= */
+
+@keyframes loaderFadeOut {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+
+/* =========================================
+   WORDMARK EXIT
+========================================= */
+
+@keyframes wordmarkExit {
+  0% {
+    transform:
+      scaleX(1.05)
+      scale(1);
+  }
+
+  100% {
+    transform:
+      scaleX(1.05)
+      scale(1.12);
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 640px) {
+  .loader-wordmark {
+    font-size: 11vw;
+
+    letter-spacing: -0.08em;
+  }
+}
